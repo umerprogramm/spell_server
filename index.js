@@ -8,7 +8,12 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 app.use(bodyParser.json())
-app.use(cors())
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions))
 
 const uri = process.env.URI;
 const client = new MongoClient(uri,{ useNewUrlParser: true, useUnifiedTopology: true });
