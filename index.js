@@ -10,10 +10,11 @@ dotenv.config();
 app.use(bodyParser.json())
 const corsOptions = {
   origin: '*',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  optionsSuccessStatus: 200,
 };
-
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 const uri = process.env.URI;
 const client = new MongoClient(uri,{ useNewUrlParser: true, useUnifiedTopology: true });
@@ -53,7 +54,7 @@ app.post('/get_user', async (req ,res)=>{
   })
 })
 
-app.post('/getinfo_and_check', async (req, res)=>{
+app.post('/getinfo_and_check', cors(corsOptions), async (req, res)=>{
   const {name, email  } = req.body
   try {
     await client.connect();
